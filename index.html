@@ -1,176 +1,507 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>名桥 MindBridge</title>
-    <meta name="description" content="Learn Chinese through pattern recognition">
-    <meta name="theme-color" content="#0f0a1e">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="icon-192.png">
-    <link rel="apple-touch-icon" href="icon-192.png">
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <style>
-        *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-        body{font-family:'Outfit',sans-serif;overflow:hidden;height:100vh;height:100dvh}
-        #root{height:100%}
-        ::-webkit-scrollbar{width:4px}
-        ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12);border-radius:2px}
-        @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(232,100,100,0.5)}50%{box-shadow:0 0 0 12px rgba(232,100,100,0)}}
-        @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-        @keyframes breathe{0%,100%{opacity:0.6}50%{opacity:1}}
-    </style>
-    <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').catch(e=>console.log('SW',e));}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>左手鬼 // DarkHatDev</title>
+<meta name="description" content="DarkHatDev — 左手鬼 · 非常道 the unusual path">
+<meta name="theme-color" content="#050505">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Noto+Sans+SC:wght@400;700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:#050505;cursor:crosshair}
+canvas{position:fixed;top:0;left:0;z-index:1}
+.yy-wrap{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:3;pointer-events:none;opacity:0;animation:yyIn 4s ease .5s forwards}
+@keyframes yyIn{0%{opacity:0;transform:translate(-50%,-50%) scale(.3) rotate(0)}50%{opacity:.12}100%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(180deg)}}
+.yy-spin{animation:spin 60s linear infinite,breathe 8s ease-in-out infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes breathe{0%,100%{opacity:.07;filter:drop-shadow(0 0 40px rgba(0,255,136,.15))}50%{opacity:.13;filter:drop-shadow(0 0 60px rgba(0,255,136,.25))}}
+.identity{position:fixed;top:50%;left:50%;transform:translate(-50%,-55%);z-index:10;text-align:center;pointer-events:none;opacity:0;animation:idIn 3s ease 2s forwards}
+@keyframes idIn{0%{opacity:0;filter:blur(20px);transform:translate(-50%,-55%) scale(.8)}60%{opacity:1;filter:blur(0)}100%{opacity:1;filter:blur(0);transform:translate(-50%,-55%) scale(1)}}
+.ghost-name{font-family:'Noto Sans SC',sans-serif;font-size:clamp(50px,10vw,120px);font-weight:900;letter-spacing:12px;background:linear-gradient(180deg,#00ff88,#00cc66 40%,#008844);-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 40px rgba(0,255,136,.4));animation:gp 4s ease-in-out infinite;line-height:1}
+@keyframes gp{0%,100%{filter:drop-shadow(0 0 40px rgba(0,255,136,.4))}50%{filter:drop-shadow(0 0 60px rgba(0,255,136,.6))}}
+.live-term{margin-top:20px;text-align:left;display:inline-block;font-family:'Share Tech Mono',monospace;font-size:clamp(11px,1.5vw,14px);color:#00ff88;line-height:1.7;min-width:clamp(280px,50vw,480px);min-height:120px;opacity:0;animation:tIn 2s ease 3.5s forwards}
+@keyframes tIn{to{opacity:1}}
+.live-term .pr{color:#00ff8866}
+.live-term .pa{color:#00ff88;font-weight:bold;text-shadow:0 0 12px rgba(0,255,136,.4)}
+.live-term .cr{display:inline-block;width:8px;height:13px;background:#00ff88;animation:bl 1s step-end infinite;vertical-align:middle}
+@keyframes bl{0%,100%{opacity:1}50%{opacity:0}}
+.live-term .dm{color:#00ff8835}
+.live-term .hl{color:#00ff88;text-shadow:0 0 8px rgba(0,255,136,.3)}
+.live-term .wn{color:#ffaa00aa}
+.live-term .ou{color:#00ff8855}
+.tagline{margin-top:18px;text-align:center;font-family:'Share Tech Mono',monospace;font-size:clamp(9px,1.2vw,12px);color:#00ff8820;letter-spacing:4px;opacity:0;animation:taIn 2s ease 5s forwards}
+@keyframes taIn{to{opacity:1}}
+.scanlines{position:fixed;inset:0;z-index:20;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px)}
+.corner{position:fixed;z-index:15;pointer-events:none;font-family:'Share Tech Mono',monospace;font-size:11px;color:#00ff8825;letter-spacing:2px;opacity:0;animation:cIn 2s ease 5s forwards;line-height:1.7}
+@keyframes cIn{to{opacity:1}}
+.corner.tl{top:20px;left:20px}.corner.tr{top:20px;right:20px;text-align:right}
+.corner.bl{bottom:60px;left:20px}.corner.br{bottom:60px;right:20px;text-align:right}
+.portal{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:25;pointer-events:auto;cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:12px;color:#00ff8800;letter-spacing:4px;text-decoration:none;padding:8px 20px;border:1px solid #00ff8800;border-radius:2px;transition:all .8s;animation:pIn 2s ease 8s forwards;white-space:nowrap}
+@keyframes pIn{to{color:#00ff8822;border-color:#00ff8810}}
+.portal:hover{color:#00ff88;border-color:#00ff8866;text-shadow:0 0 20px #00ff8844;box-shadow:0 0 30px #00ff8811;letter-spacing:8px}
+.portal .gui{font-family:'Noto Sans SC',sans-serif;font-weight:700}
+.dov{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.92);backdrop-filter:blur(12px);display:none;justify-content:center;align-items:center;padding:20px;opacity:0;transition:opacity .5s}
+.dov.active{display:flex;opacity:1}
+.dbox{max-width:700px;width:100%;max-height:80vh;overflow-y:auto;background:#0a0a0a;border:1px solid #00ff8830;border-radius:8px;padding:20px 24px;font-family:'Share Tech Mono',monospace;font-size:clamp(11px,1.4vw,14px);color:#00ff88;line-height:1.8;box-shadow:0 0 60px rgba(0,255,136,.08)}
+.dbox .bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #00ff8815}
+.dbox .dots{display:flex;gap:6px}.dbox .dot{width:10px;height:10px;border-radius:50%}
+.dbox .dot.r{background:#ff5f56}.dbox .dot.y{background:#ffbd2e}.dbox .dot.g{background:#27c93f}
+.dbox .xb{background:none;border:1px solid #00ff8830;color:#00ff8866;padding:2px 10px;cursor:pointer;border-radius:4px;font-family:inherit;font-size:11px}
+.dbox .xb:hover{color:#00ff88;border-color:#00ff88}
+.dbox .cmt{color:#00ff8835}.dbox .hlt{color:#00ff88;font-weight:bold}.dbox .dim{color:#00ff8850}
+.dbox .cr{display:inline-block;width:8px;height:14px;background:#00ff88;animation:bl 1s step-end infinite;vertical-align:middle}
+</style>
 </head>
 <body>
-<div id="root"></div>
-<script type="text/babel">
+<canvas id="rain"></canvas>
+<canvas id="phrases"></canvas>
 
+<div class="yy-wrap"><div class="yy-spin">
+<svg width="min(70vw,500)" height="min(70vw,500)" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+<defs><filter id="gl"><feGaussianBlur stdDeviation="8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+<circle cx="250" cy="250" r="240" fill="none" stroke="#00ff88" stroke-width="1.5" opacity=".25" filter="url(#gl)"/>
+<path d="M250 10A240 240 0 0 1 250 490A120 120 0 0 0 250 250A120 120 0 0 1 250 10Z" fill="#00ff88" opacity=".12"/>
+<path d="M250 10A240 240 0 0 0 250 490A120 120 0 0 1 250 250A120 120 0 0 0 250 10Z" fill="#050505" opacity=".8"/>
+<path d="M250 10A240 240 0 0 0 250 490A120 120 0 0 1 250 250A120 120 0 0 0 250 10Z" fill="none" stroke="#00ff88" stroke-width=".8" opacity=".2"/>
+<circle cx="250" cy="370" r="28" fill="#050505" opacity=".9"/><circle cx="250" cy="370" r="28" fill="none" stroke="#00ff88" stroke-width="1" opacity=".3"/><circle cx="250" cy="370" r="8" fill="#00ff88" opacity=".25"/>
+<circle cx="250" cy="130" r="28" fill="#00ff88" opacity=".15"/><circle cx="250" cy="130" r="8" fill="#00ff88" opacity=".4"/>
+<text x="250" y="262" text-anchor="middle" font-family="'Noto Sans SC',sans-serif" font-size="48" font-weight="900" fill="#00ff88" opacity=".06">鬼</text>
+<text x="250" y="140" text-anchor="middle" font-family="'Noto Sans SC',sans-serif" font-size="22" font-weight="700" fill="#050505" opacity=".35">左</text>
+<text x="250" y="380" text-anchor="middle" font-family="'Noto Sans SC',sans-serif" font-size="22" font-weight="700" fill="#00ff88" opacity=".2">右</text>
+<circle r="3" fill="#00ff88" opacity=".3"><animateMotion dur="12s" repeatCount="indefinite" path="M250,10 A240,240 0 1,1 249,10 Z"/><animate attributeName="opacity" values=".1;.5;.1" dur="3s" repeatCount="indefinite"/></circle>
+<circle r="2" fill="#00ff88" opacity=".2"><animateMotion dur="18s" repeatCount="indefinite" path="M250,10 A240,240 0 1,0 249,10 Z"/></circle>
+</svg>
+</div></div>
+
+<div class="identity">
+  <div class="ghost-name">左手鬼</div>
+  <div class="live-term" id="liveTerm"></div>
+  <div class="tagline">all roads lead to /the/unusual/path</div>
+</div>
+
+<div class="corner tl">sys.ghost<br>├─ 鬼鬼 (Guǐguī)<br>├─ ghostshell // ghost.hell<br>└─ status: 在线</div>
+<div class="corner tr">threat.level<br>├─ intel: active<br>├─ left hand strikes unseen<br>└─ 非常道: walking</div>
+<div class="corner bl">lang.matrix<br>├─ 中文 ✓ EN ✓<br>├─ PT ✓ ES ✓<br>└─ 鬼语: loaded</div>
+<div class="corner br">skills.load<br>├─ cyber intel / pentest<br>├─ wing chun / taichi<br>└─ 鬼语 ghostlang</div>
+
+<div class="scanlines"></div>
+<a class="portal" href="https://darkhatdev.github.io/ghostlang/" id="portal">▸ <span class="gui">鬼语</span> enter ghostlang ◂</a>
+
+<div class="dov" id="diagO">
+<div class="dbox">
+  <div class="bar">
+    <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+    <span style="color:#00ff8844;font-size:11px">ghostshell --diagnostics</span>
+    <button class="xb" onclick="closeDiag()">ESC</button>
+  </div>
+  <div id="diagC"></div>
+</div>
+</div>
+
+<script>
 // ═══════════════════════════════════════
-// 名桥 MINDBRIDGE v8 — 左手鬼鬼 Edition
-// Stroke tracing · Audio stories · 8 lessons
+// 左手鬼 · DarkHatDev · 非常道 · v4
+// ghostshell // ghost.hell
+// all roads lead to /the/unusual/path
+// the left hand strikes unseen
 // ═══════════════════════════════════════
 
-const THEMES={
-  cosmic:{name:"Cosmic",emoji:"🌌",bg:"linear-gradient(170deg,#0f0a1e 0%,#1a1035 40%,#1e0f2e 70%,#120a20 100%)",bgSolid:"#0f0a1e",surface:"rgba(255,255,255,0.05)",card:"rgba(255,255,255,0.06)",cardHover:"rgba(255,255,255,0.12)",header:"rgba(15,10,30,0.94)",accent:"#c4a0e8",accent2:"#e8b87a",t1:"#e8dff5",t2:"#a899c0",t3:"#7a6b94",border:"rgba(255,255,255,0.08)",font:"'Noto Sans SC',sans-serif",sBg:"#1a1035",sLine:"#c4a0e8",sGhost:"#352a4a"},
-  tarot:{name:"Tarot",emoji:"🔮",bg:"linear-gradient(170deg,#141025 0%,#1f1540 40%,#251845 70%,#0f0a1e 100%)",bgSolid:"#141025",surface:"rgba(255,255,255,0.05)",card:"rgba(255,255,255,0.06)",cardHover:"rgba(255,255,255,0.12)",header:"rgba(20,16,37,0.94)",accent:"#d4a574",accent2:"#c490d6",t1:"#f0e6d8",t2:"#c0a888",t3:"#8a7a68",border:"rgba(255,255,255,0.08)",font:"'Noto Sans SC',sans-serif",sBg:"#1f1540",sLine:"#d4a574",sGhost:"#3a2a4a"},
-  nebula:{name:"Nebula",emoji:"💫",bg:"linear-gradient(170deg,#0a0f1e 0%,#0f1a35 40%,#1a1040 70%,#0a0818 100%)",bgSolid:"#0a0f1e",surface:"rgba(255,255,255,0.05)",card:"rgba(255,255,255,0.06)",cardHover:"rgba(255,255,255,0.12)",header:"rgba(10,15,30,0.94)",accent:"#e8a0b8",accent2:"#80b8e8",t1:"#f0e0ea",t2:"#b898a8",t3:"#886878",border:"rgba(255,255,255,0.08)",font:"'Noto Sans SC',sans-serif",sBg:"#0f1a35",sLine:"#e8a0b8",sGhost:"#2a2040"},
-  zen:{name:"Zen",emoji:"◻️",bg:"linear-gradient(170deg,#f8f6f2 0%,#f0ece4 100%)",bgSolid:"#f8f6f2",surface:"rgba(0,0,0,0.03)",card:"rgba(0,0,0,0.04)",cardHover:"rgba(0,0,0,0.07)",header:"rgba(248,246,242,0.95)",accent:"#8a7a6a",accent2:"#a08878",t1:"#2a2520",t2:"#6a6055",t3:"#9a9088",border:"rgba(0,0,0,0.08)",font:"'Noto Sans SC',sans-serif",sBg:"#f0ece4",sLine:"#6a5a4a",sGhost:"#d4cec4"},
-};
+// ═══ LIVE TERMINAL — CYCLING COMMANDS ═══
+(function(){
+var term=document.getElementById('liveTerm');
+var PROMPT='<span class="pr">ghost@左手鬼:~$ </span>';
 
-const R={subject:{c:"#FF8A8A",s:"S"},verb:{c:"#6EEAE0",s:"V"},object:{c:"#FFE88A",s:"O"},particle:{c:"#BEA4F4",s:"P"},adjective:{c:"#FFB06A",s:"Adj"},adverb:{c:"#50D4E8",s:"Adv"},measure:{c:"#A88CF6",s:"MW"},time:{c:"#F4BE50",s:"T"},location:{c:"#50D4A0",s:"Loc"},question:{c:"#FF7088",s:"Q"},pronoun:{c:"#E8A0F4",s:"Pn"},negation:{c:"#FF6A6A",s:"Neg"}};
-const TC={1:"#6aaaf0",2:"#5cc47a",3:"#e8a44a",4:"#e05858",5:"#8888aa"};
-function gt(p){if(/[āēīōūǖ]/.test(p))return 1;if(/[áéíóúǘ]/.test(p))return 2;if(/[ǎěǐǒǔǚ]/.test(p))return 3;if(/[àèìòùǜ]/.test(p))return 4;return 5;}
+var sequences=[
 
-const STORIES=[
-  {id:"st1",cat:"🗣️ Slang",title:"牛逼 niúbī — The Ultimate Compliment",titleP:"牛逼 niúbī — O Elogio Supremo",body:"When something blows your mind, say 牛逼 (niúbī). Literally 'cow pussy'. Means 'awesome/badass'. Polite version: just 牛. In texts: NB.",bodyP:"Quando algo te impressiona, diga 牛逼. Significa 'incrível/foda'. Versão educada: 牛. Em textos: NB.",key:"牛逼 = awesome. 牛 = polite. NB = text.",keyP:"牛逼 = incrível. 牛 = educado. NB = texto.",audio:"太牛逼了",chars:"牛逼"},
-  {id:"st2",cat:"🗣️ Slang",title:"666 liùliùliù — Smooth Operator",titleP:"666 liùliùliù — Mandou Bem",body:"In gaming, 666 = 'skilled/smooth'. 溜 (liù, slick) sounds like 六 (liù, six). Amazing play? Chat floods with 666666.",bodyP:"Em jogos, 666 = 'habilidoso'. 溜 (liù) soa como 六 (liù, seis). Jogada incrível? Chat: 666666.",key:"666 = skilled (溜 liù ≈ 六 liù)",keyP:"666 = habilidoso (溜 ≈ 六)",audio:"六六六太溜了",chars:"溜六"},
-  {id:"st3",cat:"🗣️ Slang",title:"我去 wǒ qù — Chinese WTF",titleP:"我去 wǒ qù — O WTF Chinês",body:"我去 literally 'I go' but = 'WTF/holy crap'. Stub your toe? 我去！Clean version of 我靠.",bodyP:"我去 literalmente 'eu vou' mas = 'caramba'. Versão limpa de 我靠.",key:"我去 = WTF (clean). 我靠 = stronger.",keyP:"我去 = caramba. 我靠 = mais forte.",audio:"我去这也太贵了",chars:"去"},
-  {id:"st4",cat:"📖 Culture",title:"吃了吗？— Have You Eaten?",titleP:"吃了吗？— Já Comeu?",body:"THE Chinese greeting: 你吃了吗？Not a lunch invite — it's hello. After centuries of famine, food question = caring. Answer always 吃了.",bodyP:"O cumprimento chinês: 你吃了吗？Não é convite — é 'olá'. Perguntar sobre comida = se importar.",key:"你吃了吗 = Hello ('have you eaten?')",keyP:"你吃了吗 = Olá ('já comeu?')",audio:"你吃了吗吃了吃了",chars:"吃"},
-  {id:"st5",cat:"📖 Culture",title:"面子 miànzi — The Face Game",titleP:"面子 miànzi — O Jogo da Face",body:"面子 = face/reputation. 给面子 = give face = respect. 丢面子 = lose face = embarrass. Never correct your boss in meetings.",bodyP:"面子 = reputação. 给面子 = respeitar. 丢面子 = constranger. Nunca corrija o chefe em reunião.",key:"给面子 = respect. 丢面子 = embarrass.",keyP:"给面子 = respeitar. 丢面子 = constranger.",audio:"给他一个面子吧",chars:"面子"},
-  {id:"st6",cat:"🗣️ Slang",title:"加油 jiāyóu — Add Oil!",titleP:"加油 jiāyóu — Adiciona Óleo!",body:"加油 = 'add oil/fuel' — THE encouragement phrase. In Oxford Dictionary since 2018. 'You got this' + 'keep going' in one word.",bodyP:"加油 = 'adicionar óleo' — encorajamento. No Oxford desde 2018.",key:"加油 = You got this! Go for it!",keyP:"加油 = Vai lá! Força!",audio:"加油加油你可以的",chars:"加油"},
-  {id:"st7",cat:"📖 Culture",title:"红包 hóngbāo — Red Envelopes",titleP:"红包 hóngbāo — Envelopes Vermelhos",body:"红包 = red envelope with money. ALWAYS even amounts. NEVER ¥4 (四≈死 death). 8 = prosperity. ¥5.20 = 我爱你 (520 sounds like it).",bodyP:"红包 = envelope com dinheiro. SEMPRE pares. NUNCA ¥4 (四≈死 morte). ¥5.20 = 我爱你.",key:"红包 = red envelope. No 4! 520 = love.",keyP:"红包 = envelope. Sem 4! 520 = amor.",audio:"恭喜发财红包拿来",chars:"红包"},
-  {id:"st8",cat:"🗣️ Slang",title:"打卡 dǎkǎ — Check In Culture",titleP:"打卡 dǎkǎ — Cultura do Check-in",body:"打卡 meant 'punch timecard'. Now = social media check-ins. 网红打卡地 = influencer spots.",bodyP:"打卡 significava 'bater ponto'. Agora = check-in. 网红打卡地 = pontos de influencers.",key:"打卡 = check in. 网红 = influencer.",keyP:"打卡 = check-in. 网红 = influencer.",audio:"今天打卡一个网红餐厅",chars:"打卡"},
-  {id:"st9",cat:"📖 Culture",title:"差不多 chàbuduō — Close Enough",titleP:"差不多 chàbuduō — Quase Lá",body:"差不多 = almost/close enough. THE Chinese concept. 30 min late? 差不多是准时! Like 'mais ou menos' on steroids.",bodyP:"差不多 = quase/mais ou menos. 30 min atrasado? 差不多是准时!",key:"差不多 = close enough / good enough.",keyP:"差不多 = quase / mais ou menos.",audio:"差不多就行了",chars:"差不多"},
-  {id:"st10",cat:"🗣️ Slang",title:"躺平 tǎng píng — Lie Flat",titleP:"躺平 tǎng píng — Deitar e Desistir",body:"躺平 = lie flat — Chinese quiet quitting. 996 culture pushed youth to 'just lie flat'. 摆烂 = 'let it rot' — more extreme.",bodyP:"躺平 = 'desistência silenciosa'. Cultura 996. 摆烂 = 'deixar apodrecer'.",key:"躺平 = quit hustling. 摆烂 = let it rot.",keyP:"躺平 = desistir. 摆烂 = apodrecer.",audio:"我今天就想躺平",chars:"躺平"},
+  // 1 — IDENTITY
+  [
+    {t:'prompt'},{t:'cmd',s:'whoami',sp:80},
+    {t:'out',s:'<span class="hl">darkhatdev</span>'},
+    {t:'wait',ms:900},
+    {t:'prompt'},{t:'cmd',s:'pwd',sp:100},
+    {t:'path',s:'/the/unusual/path'},
+    {t:'wait',ms:2800},
+  ],
+
+  // 2 — PENTESTING
+  [
+    {t:'prompt'},{t:'cmd',s:'sudo nmap -sV ghostshell.local',sp:40},
+    {t:'out',s:'<span class="dm">scanning target...</span>'},
+    {t:'wait',ms:500},
+    {t:'out',s:'PORT     STATE  SERVICE'},
+    {t:'out',s:'22/tcp   open   <span class="hl">ghost-shell</span>'},
+    {t:'out',s:'443/tcp  open   <span class="hl">鬼语</span>'},
+    {t:'out',s:'8080/tcp open   pattern-engine'},
+    {t:'out',s:'<span class="dm">OS fingerprint: unusual</span>'},
+    {t:'out',s:'<span class="dm">traceroute:</span>'},
+    {t:'path',s:'/the/unusual/path'},
+    {t:'wait',ms:2800},
+  ],
+
+  // 3 — LEFT HAND
+  [
+    {t:'prompt'},{t:'cmd',s:'cat /etc/motd',sp:60},
+    {t:'out',s:'<span class="ou">左手指挥右手</span>'},
+    {t:'out',s:'<span class="ou">the left hand strikes unseen.</span>'},
+    {t:'wait',ms:900},
+    {t:'prompt'},{t:'cmd',s:'which destiny',sp:80},
+    {t:'path',s:'/the/unusual/path'},
+    {t:'wait',ms:2800},
+  ],
+
+  // 4 — DEV
+  [
+    {t:'prompt'},{t:'cmd',s:'git log --oneline -1',sp:55},
+    {t:'out',s:'<span class="hl">a1b2c3d</span> <span class="dm">init</span> 鬼语 ghostlang'},
+    {t:'wait',ms:700},
+    {t:'prompt'},{t:'cmd',s:'git remote get-url origin',sp:45},
+    {t:'path',s:'/the/unusual/path'},
+    {t:'wait',ms:2800},
+  ],
+
+  // 5 — GHOSTLANG
+  [
+    {t:'prompt'},{t:'cmd',s:'echo $GHOST_LANG',sp:60},
+    {t:'out',s:'鬼语 // GhostLang // Guǐyǔ'},
+    {t:'wait',ms:700},
+    {t:'prompt'},{t:'cmd',s:'translate --from 鬼 --to human "非常道"',sp:35},
+    {t:'path',s:'/the/unusual/path'},
+    {t:'wait',ms:2800},
+  ],
+
+  // 6 — CYBER INTEL
+  [
+    {t:'prompt'},{t:'cmd',s:'ghostshell --threat-model',sp:45},
+    {t:'out',s:'<span class="wn">[*]</span> patterns detected: <span class="hl">∞</span>'},
+    {t:'out',s:'<span class="wn">[*]</span> bilateral dominance: <span class="hl">active</span>'},
+    {t:'out',s:'<span class="wn">[*]</span> left hand: <span class="hl">strikes unseen</span>'},
+    {t:'out',s:'<span class="wn">[*]</span> tracing origin ...'},
+    {t:'path',s:'/the/unusual/path'},
+    {t:'wait',ms:2800},
+  ],
+
+  // 7 — CONSULTING
+  [
+    {t:'prompt'},{t:'cmd',s:'ls ~/ghostshell/',sp:60},
+    {t:'out',s:'pentest/  consulting/  鬼語/  threat-intel/  dev/'},
+    {t:'wait',ms:700},
+    {t:'prompt'},{t:'cmd',s:'readlink -f ~/ghostshell/*',sp:40},
+    {t:'path',s:'/the/unusual/path'},
+    {t:'wait',ms:2800},
+  ],
+
+  // 8 — TRACEROUTE
+  [
+    {t:'prompt'},{t:'cmd',s:'traceroute future.ghost',sp:50},
+    {t:'out',s:' 1  cable.mfg           <span class="dm">12ms</span>'},
+    {t:'out',s:' 2  cyber.intel.analyst  <span class="dm">8ms</span>'},
+    {t:'out',s:' 3  鬼語.ghostlang       <span class="dm">3ms</span>'},
+    {t:'out',s:' 4  ghostshell.sec       <span class="dm">2ms</span>'},
+    {t:'out',s:' 5  <span class="hl">★</span> destination:'},
+    {t:'path',s:'/the/unusual/path'},
+    {t:'wait',ms:3200},
+  ],
+
+  // 9 — GHOSTSHELL / GHOST.HELL
+  [
+    {t:'prompt'},{t:'cmd',s:'host ghostshell.dev',sp:55},
+    {t:'out',s:'ghostshell.dev is an alias for <span class="hl">ghost.hell</span>'},
+    {t:'out',s:'<span class="dm">Address: 左手鬼.local</span>'},
+    {t:'wait',ms:700},
+    {t:'prompt'},{t:'cmd',s:'dig +short ghost.hell',sp:50},
+    {t:'path',s:'/the/unusual/path'},
+    {t:'wait',ms:2800},
+  ],
+
+  // 10 — PHILOSOPHY
+  [
+    {t:'prompt'},{t:'cmd',s:'fortune | cowsay -f ghost',sp:45},
+    {t:'out',s:'<span class="ou">I am both dev and code.</span>'},
+    {t:'out',s:'<span class="ou">I debug myself when I break,</span>'},
+    {t:'out',s:'<span class="ou">patch when I loop,</span>'},
+    {t:'out',s:'<span class="ou">refresh when I stagnate.</span>'},
+    {t:'wait',ms:600},
+    {t:'prompt'},{t:'cmd',s:'pwd',sp:100},
+    {t:'path',s:'/the/unusual/path'},
+    {t:'wait',ms:2800},
+  ],
+
+  // 11 — SELF-PATCHING
+  [
+    {t:'prompt'},{t:'cmd',s:'darkhatdev --run baseline_analysis',sp:40},
+    {t:'out',s:'<span class="wn">[scan]</span> anomaly in sector 7'},
+    {t:'out',s:'<span class="wn">[patch]</span> applying self-update...'},
+    {t:'out',s:'<span class="hl">[done]</span> system patched'},
+    {t:'wait',ms:600},
+    {t:'prompt'},{t:'cmd',s:'echo $HOME',sp:70},
+    {t:'path',s:'/the/unusual/path'},
+    {t:'wait',ms:2800},
+  ],
+
+  // 12 — MULTILINGUAL
+  [
+    {t:'prompt'},{t:'cmd',s:'locale -a | head -5',sp:50},
+    {t:'out',s:'zh_CN.鬼语'},
+    {t:'out',s:'en_US.ghost'},
+    {t:'out',s:'pt_BR.fantasma'},
+    {t:'out',s:'es_ES.fantasma'},
+    {t:'wait',ms:700},
+    {t:'prompt'},{t:'cmd',s:'echo "all paths converge"',sp:45},
+    {t:'path',s:'/the/unusual/path'},
+    {t:'wait',ms:2800},
+  ],
+
 ];
 
-const LESSONS=[
-  {id:1,title:"Greetings",tz:"问候",ss:[
-    {w:[{h:"你",p:"nǐ",e:"you",pt:"você",r:"subject"},{h:"好",p:"hǎo",e:"good",pt:"bom/boa",r:"adjective"}],col:"嗨 (hāi) — from English 'hi'",colP:"嗨 — do inglês 'hi'",n:"Literally 'You good'. No verb needed!",nP:"Literalmente 'Você bom'. Sem verbo!"},
-    {w:[{h:"我",p:"wǒ",e:"I",pt:"eu",r:"subject"},{h:"叫",p:"jiào",e:"am called",pt:"me chamo",r:"verb"},{h:"鬼鬼",p:"Guǐguǐ",e:"Guigui",pt:"Guigui",r:"object"}],col:"我是鬼鬼 — 是=am (more direct)",colP:"我是鬼鬼 — 是=sou (mais direto)",n:"我叫 = 'I am called'. 鬼 = ghost/spirit — 左手鬼鬼!",nP:"我叫 = 'Me chamo'. 鬼 = fantasma/espírito!"},
-    {w:[{h:"你",p:"nǐ",e:"you",pt:"você",r:"subject"},{h:"叫",p:"jiào",e:"called",pt:"chama",r:"verb"},{h:"什么",p:"shénme",e:"what",pt:"o quê",r:"question"},{h:"名字",p:"míngzi",e:"name",pt:"nome",r:"object"}],col:"你叫啥？— 啥 replaces 什么",colP:"你叫啥？— 啥 substitui 什么",n:"什么 goes WHERE the answer goes! 你叫[什么]→我叫[鬼鬼]",nP:"什么 fica ONDE a resposta vai!"},
-    {w:[{h:"很",p:"hěn",e:"very",pt:"muito",r:"adverb"},{h:"高兴",p:"gāoxìng",e:"happy",pt:"feliz",r:"adjective"},{h:"认识",p:"rènshi",e:"to meet",pt:"conhecer",r:"verb"},{h:"你",p:"nǐ",e:"you",pt:"você",r:"object"}],col:"幸会幸会 — literary/formal",colP:"幸会幸会 — literário",n:"很 before adjectives is grammar glue, not emphasis!",nP:"很 antes de adjetivos é gramática!"},
-  ]},
-  {id:2,title:"Daily Life",tz:"日常",ss:[
-    {w:[{h:"我",p:"wǒ",e:"I",pt:"eu",r:"subject"},{h:"今天",p:"jīntiān",e:"today",pt:"hoje",r:"time"},{h:"很",p:"hěn",e:"very",pt:"muito",r:"adverb"},{h:"忙",p:"máng",e:"busy",pt:"ocupado",r:"adjective"}],col:"今儿忙死了 — busy to death",colP:"今儿忙死了 — ocupado de morrer",n:"Time ALWAYS before verb: S + TIME + desc.",nP:"Tempo SEMPRE antes: S + TEMPO + desc."},
-    {w:[{h:"我",p:"wǒ",e:"I",pt:"eu",r:"subject"},{h:"不",p:"bù",e:"not",pt:"não",r:"negation"},{h:"喝",p:"hē",e:"drink",pt:"beber",r:"verb"},{h:"咖啡",p:"kāfēi",e:"coffee",pt:"café",r:"object"}],col:"咖啡我不碰 — topic-front!",colP:"咖啡我不碰 — tópico à frente!",n:"不 before verb = negation. 咖啡 ≈ café — same origin!",nP:"不 antes do verbo = negação. 咖啡 ≈ café!"},
-    {w:[{h:"我们",p:"wǒmen",e:"we",pt:"nós",r:"subject"},{h:"明天",p:"míngtiān",e:"tomorrow",pt:"amanhã",r:"time"},{h:"去",p:"qù",e:"go",pt:"ir",r:"verb"},{h:"看",p:"kàn",e:"see",pt:"ver",r:"verb"},{h:"电影",p:"diànyǐng",e:"movie",pt:"filme",r:"object"}],col:"明儿看电影去",colP:"明儿看电影去",n:"去看 = go+see. No tenses — 明天 handles time!",nP:"去看 = ir+ver. Sem tempos verbais!"},
-  ]},
-  {id:3,title:"Shopping",tz:"购物",ss:[
-    {w:[{h:"这",p:"zhè",e:"this",pt:"este/a",r:"pronoun"},{h:"个",p:"gè",e:"[MW]",pt:"[cl.]",r:"measure"},{h:"多少",p:"duōshao",e:"how much",pt:"quanto",r:"question"},{h:"钱",p:"qián",e:"money",pt:"dinheiro",r:"object"}],col:"这咋卖的？",colP:"这咋卖的？",n:"个 = universal measure word. Between number + noun.",nP:"个 = classificador universal."},
-    {w:[{h:"太",p:"tài",e:"too",pt:"demais",r:"adverb"},{h:"贵",p:"guì",e:"expensive",pt:"caro",r:"adjective"},{h:"了",p:"le",e:"[change!]",pt:"[mudança!]",r:"particle"}],col:"好贵啊！",colP:"好贵啊！",n:"了 = CHANGE marker, NOT past tense! It became expensive.",nP:"了 = MUDANÇA, NÃO passado!"},
-    {w:[{h:"可以",p:"kěyǐ",e:"can",pt:"pode",r:"verb"},{h:"便宜",p:"piányi",e:"cheaper",pt:"barato",r:"adjective"},{h:"一点",p:"yìdiǎn",e:"a little",pt:"um pouco",r:"adverb"},{h:"吗",p:"ma",e:"[yes/no?]",pt:"[sim/não?]",r:"particle"}],col:"能不能便宜点儿？",colP:"能不能便宜点儿？",n:"吗 = yes/no question. 能不能 = can-not-can pattern.",nP:"吗 = sim/não. 能不能 = pode-não-pode?"},
-  ]},
-  {id:4,title:"Food",tz:"吃饭",ss:[
-    {w:[{h:"我",p:"wǒ",e:"I",pt:"eu",r:"subject"},{h:"想",p:"xiǎng",e:"want",pt:"quero",r:"verb"},{h:"吃",p:"chī",e:"eat",pt:"comer",r:"verb"},{h:"火锅",p:"huǒguō",e:"hotpot",pt:"hotpot",r:"object"}],col:"整点火锅",colP:"整点火锅 — bora hotpot",n:"想+verb = want to. Stack verbs freely!",nP:"想+verbo = querer."},
-    {w:[{h:"这",p:"zhè",e:"this",pt:"isto",r:"pronoun"},{h:"个",p:"gè",e:"[MW]",pt:"[cl.]",r:"measure"},{h:"菜",p:"cài",e:"dish",pt:"prato",r:"object"},{h:"太",p:"tài",e:"too",pt:"demais",r:"adverb"},{h:"辣",p:"là",e:"spicy",pt:"picante",r:"adjective"},{h:"了",p:"le",e:"[!]",pt:"[!]",r:"particle"}],col:"辣死我了！",colP:"辣死我了！",n:"太...了 = excessively. 死了 = 'to death' emphasis!",nP:"太...了 = demais. 死了 = 'de morrer'!"},
-    {w:[{h:"服务员",p:"fúwùyuán",e:"waiter",pt:"garçom",r:"object"},{h:"买单",p:"mǎidān",e:"bill",pt:"conta",r:"verb"}],col:"结账 — northern style",colP:"结账 — estilo do norte",n:"服务员! = calling waiter. Not rude in China!",nP:"服务员! Não é rude na China!"},
-  ]},
-  {id:5,title:"Transport",tz:"交通",ss:[
-    {w:[{h:"我",p:"wǒ",e:"I",pt:"eu",r:"subject"},{h:"要",p:"yào",e:"need to",pt:"preciso",r:"verb"},{h:"去",p:"qù",e:"go to",pt:"ir",r:"verb"},{h:"机场",p:"jīchǎng",e:"airport",pt:"aeroporto",r:"location"}],col:"走，去机场",colP:"走，去机场 — bora",n:"要+verb = will/need. Stronger than 想.",nP:"要+verbo. Mais forte que 想."},
-    {w:[{h:"地铁",p:"dìtiě",e:"subway",pt:"metrô",r:"object"},{h:"站",p:"zhàn",e:"station",pt:"estação",r:"object"},{h:"在",p:"zài",e:"is at",pt:"fica",r:"verb"},{h:"哪里",p:"nǎlǐ",e:"where",pt:"onde",r:"question"}],col:"地铁在哪儿？",colP:"地铁在哪儿？",n:"在+哪里 = is where? Same swap pattern!",nP:"在+哪里 = onde fica?"},
-    {w:[{h:"师傅",p:"shīfu",e:"driver",pt:"motorista",r:"subject"},{h:"请",p:"qǐng",e:"please",pt:"por favor",r:"adverb"},{h:"开",p:"kāi",e:"drive",pt:"dirigir",r:"verb"},{h:"慢",p:"màn",e:"slow",pt:"devagar",r:"adverb"},{h:"一点",p:"yìdiǎn",e:"a bit",pt:"um pouco",r:"adverb"}],col:"慢点儿开！",colP:"慢点儿开！",n:"师傅 = respectful for skilled workers!",nP:"师傅 = respeitoso!"},
-  ]},
-  {id:6,title:"Family",tz:"家人",ss:[
-    {w:[{h:"这",p:"zhè",e:"this",pt:"esta",r:"pronoun"},{h:"是",p:"shì",e:"is",pt:"é",r:"verb"},{h:"我",p:"wǒ",e:"my",pt:"minha",r:"subject"},{h:"女儿",p:"nǚ'ér",e:"daughter",pt:"filha",r:"object"}],col:"这我闺女 — casual",colP:"这我闺女 — casual",n:"是 = to be. The ONLY true 'is' verb in Chinese.",nP:"是 = ser. O ÚNICO 'ser' real em chinês."},
-    {w:[{h:"她",p:"tā",e:"she",pt:"ela",r:"subject"},{h:"很",p:"hěn",e:"very",pt:"muito",r:"adverb"},{h:"聪明",p:"cōngming",e:"smart",pt:"inteligente",r:"adjective"}],col:"她贼聪明 — 贼=crazy smart",colP:"她贼聪明 — 贼=super",n:"她他它 all = tā! Only writing differs.",nP:"她他它 soam igual: tā!"},
-    {w:[{h:"我",p:"wǒ",e:"I",pt:"eu",r:"subject"},{h:"爱",p:"ài",e:"love",pt:"amo",r:"verb"},{h:"我的",p:"wǒ de",e:"my",pt:"minha",r:"pronoun"},{h:"家",p:"jiā",e:"family",pt:"família",r:"object"}],col:"家人最重要 — family #1",colP:"家人最重要 — família #1",n:"的 = possessive. 我的=my. 你的=your.",nP:"的 = possessivo. 我的=meu."},
-  ]},
-  {id:7,title:"Feelings",tz:"感觉",ss:[
-    {w:[{h:"我",p:"wǒ",e:"I",pt:"eu",r:"subject"},{h:"很",p:"hěn",e:"very",pt:"muito",r:"adverb"},{h:"开心",p:"kāixīn",e:"happy",pt:"feliz",r:"adjective"}],col:"高兴坏了 — ecstatic",colP:"高兴坏了 — eufórico",n:"开心/高兴/快乐 all = happy, different vibes.",nP:"开心/高兴/快乐 = feliz, vibes diferentes."},
-    {w:[{h:"今天",p:"jīntiān",e:"today",pt:"hoje",r:"time"},{h:"天气",p:"tiānqì",e:"weather",pt:"clima",r:"subject"},{h:"真",p:"zhēn",e:"really",pt:"realmente",r:"adverb"},{h:"好",p:"hǎo",e:"good",pt:"bom",r:"adjective"}],col:"今儿天不错",colP:"今儿天不错 — dia legal",n:"真 = truly/really. Stronger than 很.",nP:"真 = verdadeiramente. Mais forte que 很."},
-    {w:[{h:"我",p:"wǒ",e:"I",pt:"eu",r:"subject"},{h:"有点",p:"yǒudiǎn",e:"a bit",pt:"um pouco",r:"adverb"},{h:"累",p:"lèi",e:"tired",pt:"cansado",r:"adjective"}],col:"累成狗了 — tired as a dog",colP:"累成狗了 — cansado como cão",n:"有点=a bit (negative). 一点=a bit (neutral).",nP:"有点=(negativo). 一点=(neutro)."},
-  ]},
-  {id:8,title:"Numbers",tz:"数字",ss:[
-    {w:[{h:"一",p:"yī",e:"one",pt:"um",r:"object"},{h:"二",p:"èr",e:"two",pt:"dois",r:"object"},{h:"三",p:"sān",e:"three",pt:"três",r:"object"},{h:"四",p:"sì",e:"four",pt:"quatro",r:"object"},{h:"五",p:"wǔ",e:"five",pt:"cinco",r:"object"}],col:"幺(yāo) replaces 一 in phones",colP:"幺(yāo) substitui 一 em telefones",n:"四(4)=bad luck (≈死 death). 八(8)=lucky!",nP:"四(4)=azar (≈死 morte). 八(8)=sorte!"},
-    {w:[{h:"六",p:"liù",e:"six",pt:"seis",r:"object"},{h:"七",p:"qī",e:"seven",pt:"sete",r:"object"},{h:"八",p:"bā",e:"eight",pt:"oito",r:"object"},{h:"九",p:"jiǔ",e:"nine",pt:"nove",r:"object"},{h:"十",p:"shí",e:"ten",pt:"dez",r:"object"}],col:"666=awesome 八=prosperity",colP:"666=incrível 八=prosperidade",n:"Combine: 十一=11, 二十=20, 二十一=21. Just math!",nP:"Combine: 十一=11, 二十=20. Matemática!"},
-    {w:[{h:"我",p:"wǒ",e:"I",pt:"eu",r:"subject"},{h:"今年",p:"jīnnián",e:"this year",pt:"este ano",r:"time"},{h:"三十",p:"sānshí",e:"thirty",pt:"trinta",r:"object"},{h:"岁",p:"suì",e:"years old",pt:"anos",r:"measure"}],col:"我三十了",colP:"我三十了",n:"No 'am'. No 'old'. Just: I + year + 30 + age-word.",nP:"Sem 'tenho'. Só: eu + ano + 30 + contador."},
-  ]},
+var si=0;
+
+function run(seq,cb){
+  term.innerHTML='';
+  var idx=0;
+  function next(){
+    if(idx>=seq.length){cb();return;}
+    var s=seq[idx];idx++;
+    switch(s.t){
+      case'prompt':aH(PROMPT);next();break;
+      case'cmd':typeT(s.s,s.sp||60,function(){aH('<br>');next();});break;
+      case'out':aH(s.s+'<br>');setTimeout(next,120);break;
+      case'path':aH('<span class="pa">');typeT(s.s,100,function(){aH('</span><br>');next();});break;
+      case'wait':
+        var c=document.createElement('span');c.className='cr';c.id='wc';term.appendChild(c);
+        setTimeout(function(){var e=document.getElementById('wc');if(e)e.remove();next();},s.ms);
+        break;
+    }
+  }
+  next();
+}
+
+function aH(h){var c=term.querySelector('.cr');if(c)c.remove();term.insertAdjacentHTML('beforeend',h);}
+
+function typeT(text,speed,cb){
+  var i=0,chars=text.split('');
+  var caret=document.createElement('span');caret.className='cr';term.appendChild(caret);
+  function go(){
+    if(i>=chars.length){caret.remove();cb();return;}
+    caret.insertAdjacentText('beforebegin',chars[i]);i++;
+    setTimeout(go,speed+Math.random()*speed*.5);
+  }
+  go();
+}
+
+function cycle(){
+  run(sequences[si],function(){
+    si=(si+1)%sequences.length;
+    term.style.transition='opacity .5s';term.style.opacity='.3';
+    setTimeout(function(){term.style.opacity='1';cycle();},800);
+  });
+}
+setTimeout(cycle,4000);
+})();
+
+
+// ═══ LAYER 1: CHARACTER RAIN ═══
+(function(){
+var c=document.getElementById('rain'),x=c.getContext('2d');
+function r(){c.width=innerWidth;c.height=innerHeight;}r();
+var ch='鬼左手故事黑客開發系統入侵無限智慧虛無流水知己代碼靈魂能量波動頻率意識網絡數據陰陽道非常鬼語幽靈暗影左道獨角獸路線追蹤掃描目標殼地獄'+'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*<>/\\{}[]|;:~';
+var f=15,col,d,s,b;
+function init(){col=Math.floor(c.width/f);d=[];s=[];b=[];for(var i=0;i<col;i++){d[i]=Math.random()*-50;s[i]=.3+Math.random()*.8;b[i]=.3+Math.random()*.7;}}
+init();addEventListener('resize',function(){r();init();});
+function draw(){
+  x.fillStyle='rgba(5,5,5,0.06)';x.fillRect(0,0,c.width,c.height);x.font=f+'px monospace';
+  for(var i=0;i<d.length;i++){
+    var t=ch.charAt(Math.floor(Math.random()*ch.length)),y=d[i]*f,h=(c.height-y)/c.height;
+    x.fillStyle=h<.1?'rgba(180,255,200,'+(b[i]*.95)+')':'rgba(0,'+(180+Math.floor(b[i]*75))+',68,'+(b[i]*.7)+')';
+    x.fillText(t,i*f,y);
+    if(y>c.height&&Math.random()>.975){d[i]=0;s[i]=.3+Math.random()*.8;b[i]=.3+Math.random()*.7;}
+    d[i]+=s[i];
+  }
+}
+(function l(){draw();requestAnimationFrame(l);})();
+})();
+
+
+// ═══ LAYER 2: PHRASES ═══
+(function(){
+var c=document.getElementById('phrases'),x=c.getContext('2d');
+c.style.cssText='position:fixed;top:0;left:0;z-index:5;pointer-events:none';
+function r(){c.width=innerWidth;c.height=innerHeight;}r();
+addEventListener('resize',r);
+var ph=[
+  {t:'鬼鬼',w:3,s:22},{t:'左手鬼',w:3,s:20},{t:'DarkHatDev',w:2,s:15},
+  {t:'ghostshell',w:2,s:15},{t:'ghost.hell',w:1,s:14},
+  {t:'马克西',w:2,s:18},{t:'0xGHOST',w:1,s:14},
+  {t:'左手指挥右手',w:3,s:20},{t:'左手为王',w:2,s:22},
+  {t:'left hand strikes unseen',w:2,s:13},
+  {t:'非常道',w:3,s:24},{t:'/the/unusual/path',w:3,s:16},
+  {t:'all roads lead to...',w:2,s:13},{t:'道可道非常道',w:2,s:18},
+  {t:'鬼语',w:3,s:24},{t:'GhostLang',w:2,s:16},{t:'Guǐyǔ',w:1,s:15},
+  {t:'$ whoami',w:2,s:14},{t:'$ pwd',w:2,s:14},
+  {t:'root@ghost:~$',w:1,s:13},{t:'access granted',w:1,s:13},
+  {t:'pattern found',w:2,s:14},{t:'ghost in the wire',w:1,s:13},
+  {t:'I am both dev and code',w:2,s:14},{t:'self-patching',w:1,s:13},
+  {t:'traceroute future',w:1,s:13},{t:'destination reached',w:1,s:12},
+  {t:'sudo nmap -sV target',w:1,s:12},{t:'threat detected',w:1,s:13},
+  {t:'the ghost sees everything',w:1,s:12},{t:'signal acquired',w:1,s:13},
+  {t:'知己知彼',w:2,s:20},{t:'大智若愚',w:2,s:20},{t:'静水深流',w:2,s:20},
+  {t:'阴阳平衡',w:2,s:20},{t:'以柔克刚',w:1,s:20},{t:'虚无之道',w:1,s:18},
+  {t:'algorithmic mind',w:1,s:13},{t:'bilateral dominance',w:1,s:12},
+  {t:'unusual with everything',w:1,s:13},{t:'the exception',w:1,s:13},
+  {t:'fantasma observando',w:1,s:13},{t:'o caminho incomum',w:1,s:13},
+  {t:'el fantasma ve todo',w:1,s:13},{t:'el camino inusual',w:1,s:13},
+  {t:'加油',w:2,s:24},
+];
+var pool=[];ph.forEach(function(p){for(var i=0;i<p.w;i++)pool.push(p);});
+var active=[],MX=6,timer=0,INT=85;
+function spawn(){
+  if(active.length>=MX)return;
+  var p=pool[Math.floor(Math.random()*pool.length)],cn=/[\u4e00-\u9fff]/.test(p.t);
+  active.push({t:p.t,x:30+Math.random()*(c.width-200),y:-30,sz:p.s,
+    sp:.3+Math.random()*.6,op:0,mx:.15+Math.random()*.35,fi:true,
+    fs:.003+Math.random()*.005,life:0,ml:300+Math.random()*400,
+    font:cn?"'Noto Sans SC',sans-serif":"'Share Tech Mono',monospace",
+    glow:Math.random()>.7,dr:(Math.random()-.5)*.3});
+}
+function draw(){
+  x.clearRect(0,0,c.width,c.height);timer++;if(timer>=INT){spawn();timer=0;}
+  for(var i=active.length-1;i>=0;i--){
+    var p=active[i];p.life++;p.y+=p.sp;p.x+=p.dr;
+    if(p.fi){p.op+=p.fs;if(p.op>=p.mx){p.op=p.mx;p.fi=false;}}
+    if(p.life>p.ml*.7)p.op-=p.fs*1.5;
+    if(p.op<=0||p.y>c.height+50){active.splice(i,1);continue;}
+    x.save();x.globalAlpha=p.op;x.font=p.sz+'px '+p.font;x.fillStyle='#00ff88';
+    if(p.glow){x.shadowColor='#00ff88';x.shadowBlur=20;}
+    x.fillText(p.t,p.x,p.y);x.restore();
+  }
+}
+function l(){draw();requestAnimationFrame(l);}
+setTimeout(l,1500);
+})();
+
+
+// ═══ DIAGNOSTICS TERMINAL ═══
+var diagLines=[
+  {c:'p',t:'$ ghostshell --diagnostics'},{c:'b'},
+  {c:'m',t:'# ═══ SYSTEM IDENTITY ═══'},
+  {c:'t',t:'> <span class="hlt">DarkHatDev</span> is a living algorithm: half human, half code.'},
+  {c:'t',t:'> Both developer and runtime. Self-patching. Continuous integration.'},
+  {c:'t',t:'> The left hand strikes unseen.'},
+  {c:'b'},
+  {c:'m',t:'# ═══ $ cat /sys/ghost/specs ═══'},
+  {c:'t',t:'  Handle .......... <span class="hlt">左手鬼</span> // DarkHatDev'},
+  {c:'t',t:'  Alias ........... <span class="hlt">ghostshell</span> // ghost.hell'},
+  {c:'t',t:'  Designation ..... <span class="hlt">鬼鬼</span> (Guǐguī)'},
+  {c:'t',t:'  Classification .. <span class="hlt">马克西</span> (Maximus Glixia)'},
+  {c:'t',t:'  OS .............. Continuous Online Learning'},
+  {c:'t',t:'  Path ............ <span class="hlt">/the/unusual/path</span>'},
+  {c:'t',t:'  Language ........ <span class="hlt">鬼语</span> (GhostLang / Guǐyǔ)'},
+  {c:'b'},
+  {c:'m',t:'# ═══ DEPENDENCIES ═══'},
+  {c:'t',t:'  Pattern Recognition .... v∞'},
+  {c:'t',t:'  Intuition Engine ....... active'},
+  {c:'t',t:'  Baseline Detection ..... online'},
+  {c:'t',t:'  Multilingual Decoder ... 中文 EN PT ES'},
+  {c:'t',t:'  Martial Arts Parser .... Wing Chun / Taichi'},
+  {c:'b'},
+  {c:'m',t:'# ═══ CORE FUNCTIONS ═══'},
+  {c:'t',t:'  baseline_analysis() .... reads shifts in behavior & rhythm'},
+  {c:'t',t:'  prediction_engine() .... forecasts from micro-data + intuition'},
+  {c:'t',t:'  patch_manager() ........ self-updates when caught in loops'},
+  {c:'t',t:'  bias_control() ......... ~4% margin, acknowledged'},
+  {c:'b'},
+  {c:'m',t:'# ═══ KNOWN BUGS ═══'},
+  {c:'t',t:'  <span class="dim">⚠ Rabbit Hole Risk: over-processing unstructured input</span>'},
+  {c:'t',t:'  <span class="dim">⚠ Limited peer compatibility: few comparable nodes</span>'},
+  {c:'t',t:'  <span class="dim">⚠ Authenticity vs camouflage: kernel conflict</span>'},
+  {c:'b'},
+  {c:'m',t:'# ═══ SERVICES ═══'},
+  {c:'t',t:'  /ghostshell/pentest/ ......... vulnerability assessment'},
+  {c:'t',t:'  /ghostshell/consulting/ ...... cybersecurity strategy'},
+  {c:'t',t:'  /ghostshell/threat-intel/ .... pattern analysis'},
+  {c:'t',t:'  /ghostshell/鬼語/ ............ language tools'},
+  {c:'t',t:'  /ghostshell/dev/ ............. unusual solutions'},
+  {c:'b'},
+  {c:'m',t:'# ═══ PHILOSOPHY ═══'},
+  {c:'t',t:'> I am <span class="hlt">DarkHatDev</span>. I am both dev and code.'},
+  {c:'t',t:'> I debug myself when I break, patch when I loop,'},
+  {c:'t',t:'> and refresh when I stagnate.'},
+  {c:'t',t:'> I do not block foreign code — I make space,'},
+  {c:'t',t:'> adjust, and integrate.'},
+  {c:'t',t:'> <span class="hlt">The left hand strikes unseen.</span>'},
+  {c:'t',t:'> I am the unicorn system: <span class="hlt">rare, adaptive, alive.</span>'},
+  {c:'b'},
+  {c:'p',t:'$ pwd'},
+  {c:'t',t:'<span class="hlt">/the/unusual/path</span>'},
+  {c:'b'},
+  {c:'p',t:'$ <span class="cr"></span>'},
 ];
 
-// ═══ SETTINGS ═══
-function Settings({thm,setThm,fs,setFs,sc,setSc,lang,setLang,pin,setPin,rate,setRate,close}){
-  const th=THEMES[thm];
-  const row=(l,c)=>React.createElement('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'10px 0',borderBottom:`1px solid ${th.border}`}},React.createElement('span',{style:{fontSize:'14px',color:th.t2}},l),c);
-  const tog=(v,s)=>React.createElement('button',{onClick:()=>s(!v),style:{width:'42px',height:'24px',borderRadius:'12px',border:'none',background:v?th.accent:`${th.t3}40`,cursor:'pointer',position:'relative'}},React.createElement('div',{style:{width:'18px',height:'18px',borderRadius:'9px',background:'#fff',position:'absolute',top:'3px',left:v?'21px':'3px',transition:'all 0.2s'}}));
-  return React.createElement('div',{onClick:e=>{if(e.target===e.currentTarget)close();},style:{position:'fixed',inset:0,zIndex:100,background:'rgba(0,0,0,0.65)',backdropFilter:'blur(8px)',display:'flex',justifyContent:'center',alignItems:'flex-start',padding:'30px 14px',overflowY:'auto'}},
-    React.createElement('div',{style:{background:th.bgSolid,borderRadius:'16px',padding:'20px',maxWidth:'400px',width:'100%',border:`1px solid ${th.border}`,maxHeight:'80vh',overflowY:'auto'}},
-      React.createElement('div',{style:{display:'flex',justifyContent:'space-between',marginBottom:'14px'}},React.createElement('h2',{style:{margin:0,color:th.t1,fontSize:'18px'}},"⚙️ Settings"),React.createElement('button',{onClick:close,style:{background:'none',border:'none',color:th.t3,fontSize:'18px',cursor:'pointer'}},"✕")),
-      React.createElement('div',{style:{fontSize:'11px',color:th.t3,textTransform:'uppercase',letterSpacing:'1.5px',fontWeight:700,margin:'8px 0 6px'}},"Theme"),
-      React.createElement('div',{style:{display:'flex',flexWrap:'wrap',gap:'6px',marginBottom:'12px'}},Object.entries(THEMES).map(([k,v])=>React.createElement('button',{key:k,onClick:()=>setThm(k),style:{padding:'6px 12px',borderRadius:'8px',border:thm===k?`2px solid ${v.accent}`:`1px solid ${th.border}`,background:thm===k?`${v.accent}20`:'transparent',color:thm===k?v.accent:th.t2,cursor:'pointer',fontSize:'13px',fontWeight:600}},v.emoji+" "+v.name))),
-      row("Character size "+fs+"px",React.createElement('input',{type:'range',min:26,max:50,value:fs,onChange:e=>setFs(Number(e.target.value)),style:{width:'120px',accentColor:th.accent}})),
-      row("Speech speed "+rate+"x",React.createElement('input',{type:'range',min:0.3,max:1.2,step:0.1,value:rate,onChange:e=>setRate(parseFloat(e.target.value)),style:{width:'120px',accentColor:th.accent}})),
-      row("Pinyin",tog(pin,setPin)),row("🗣️ Colloquial",tog(sc,setSc)),
-      React.createElement('div',{style:{fontSize:'11px',color:th.t3,textTransform:'uppercase',letterSpacing:'1.5px',fontWeight:700,margin:'12px 0 6px'}},"Translation"),
-      React.createElement('div',{style:{display:'flex',gap:'6px'}},[["english","🇺🇸"],["portuguese","🇧🇷"],["both","Both"]].map(([v,l])=>React.createElement('button',{key:v,onClick:()=>setLang(v),style:{flex:1,padding:'7px',borderRadius:'8px',border:`1px solid ${lang===v?th.accent:th.border}`,background:lang===v?`${th.accent}18`:'transparent',color:lang===v?th.accent:th.t3,cursor:'pointer',fontSize:'14px',fontWeight:600}},l))),
-      React.createElement('div',{style:{marginTop:'16px',padding:'10px',background:th.surface,borderRadius:'10px',fontSize:'12px',color:th.t3,lineHeight:1.6}},"名桥 MindBridge v8 · 左手鬼 Edition · ",LESSONS.length," lessons · ",STORIES.length," stories · Built for 鬼鬼")
-    )
-  );
+var diagOpen=false;
+function openDiag(){
+  if(diagOpen)return;diagOpen=true;
+  var o=document.getElementById('diagO'),ct=document.getElementById('diagC');
+  ct.innerHTML='';o.classList.add('active');
+  var li=0;
+  function go(){
+    if(li>=diagLines.length)return;
+    var l=diagLines[li],d=document.createElement('div');
+    d.style.opacity='0';d.style.transition='opacity .3s';
+    if(l.c==='b')d.innerHTML='&nbsp;';
+    else if(l.c==='p')d.innerHTML='<span style="color:#00ff8866">'+l.t+'</span>';
+    else if(l.c==='m')d.innerHTML='<span class="cmt">'+l.t+'</span>';
+    else d.innerHTML=l.t;
+    ct.appendChild(d);ct.parentElement.scrollTop=ct.parentElement.scrollHeight;
+    setTimeout(function(){d.style.opacity='1';},50);
+    li++;setTimeout(go,l.c==='p'?350:l.c==='b'?80:70);
+  }
+  setTimeout(go,300);
 }
+function closeDiag(){diagOpen=false;document.getElementById('diagO').classList.remove('active');}
 
-// ═══ MAIN APP ═══
-function MindBridge(){
-  const[cL,setCL]=React.useState(0);const[cS,setCS]=React.useState(0);const[lang,setLang]=React.useState("both");const[pin,setPin]=React.useState(true);const[ai,setAi]=React.useState(null);const[mode,setMode]=React.useState("study");const[stg,setStg]=React.useState(false);const[thm,setThm]=React.useState("cosmic");const[fs,setFs]=React.useState(34);const[rate,setRate]=React.useState(0.8);const[sc,setSc]=React.useState(true);
-  const lesson=LESSONS[cL],sent=lesson.ss[cS],th=THEMES[thm];
-  const totalWords=LESSONS.reduce((a,l)=>a+l.ss.reduce((b,s)=>b+s.w.length,0),0);
-  const speak=useSpeak(rate);
-  React.useEffect(()=>{if(!window.speechSynthesis)return;window.speechSynthesis.getVoices();window.speechSynthesis.onvoiceschanged=()=>window.speechSynthesis.getVoices();},[]);
-  const next=()=>{if(cS<lesson.ss.length-1)setCS(s=>s+1);else if(cL<LESSONS.length-1){setCL(l=>l+1);setCS(0);}setAi(null);};
-  const prev=()=>{if(cS>0)setCS(s=>s-1);else if(cL>0){const nl=cL-1;setCL(nl);setCS(LESSONS[nl].ss.length-1);}setAi(null);};
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&diagOpen)closeDiag();});
+document.getElementById('diagO').addEventListener('click',function(e){if(e.target===this)closeDiag();});
 
-  return React.createElement('div',{style:{minHeight:'100vh',height:'100dvh',display:'flex',flexDirection:'column',background:th.bg,color:th.t1,fontFamily:"'Outfit','Noto Sans SC',sans-serif"}},
-    stg&&React.createElement(Settings,{thm,setThm,fs,setFs,sc,setSc,lang,setLang,pin,setPin,rate,setRate,close:()=>setStg(false)}),
-    React.createElement('div',{style:{background:th.header,backdropFilter:'blur(16px)',borderBottom:`1px solid ${th.border}`,padding:'10px 14px',flexShrink:0}},
-      React.createElement('div',{style:{maxWidth:'800px',margin:'0 auto',display:'flex',justifyContent:'space-between',alignItems:'center'}},
-        React.createElement('h1',{style:{margin:0,fontSize:'20px',fontWeight:900,background:`linear-gradient(135deg,${th.accent},${th.accent2})`,WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}},"名桥 MindBridge"),
-        React.createElement('div',{style:{display:'flex',gap:'3px'}},
-          [["study","📖"],["practice","🎤"],["stories","📚"]].map(([m,e])=>React.createElement('button',{key:m,onClick:()=>setMode(m),style:{padding:'6px 10px',borderRadius:'8px',border:'none',background:mode===m?th.accent:`${th.accent}15`,color:mode===m?'#fff':th.t3,fontSize:'13px',fontWeight:700,cursor:'pointer'}},e)),
-          React.createElement('button',{onClick:()=>setStg(true),style:{padding:'6px 10px',borderRadius:'8px',border:'none',background:`${th.accent}15`,color:th.t3,fontSize:'13px',cursor:'pointer'}},"⚙️")
-        )
-      )
-    ),
-    React.createElement('div',{style:{flex:1,overflowY:'auto',overflowX:'hidden',WebkitOverflowScrolling:'touch'}},
-      React.createElement('div',{style:{maxWidth:'800px',margin:'0 auto',padding:'12px 12px 24px 12px'}},
-        mode==="stories"?React.createElement(StoriesView,{th,fs,lang,spk:speak}):
-        React.createElement(React.Fragment,null,
-          React.createElement('div',{style:{display:'flex',gap:'5px',marginBottom:'10px',overflowX:'auto',paddingBottom:'4px'}},LESSONS.map((l,i)=>React.createElement('button',{key:l.id,onClick:()=>{setCL(i);setCS(0);setAi(null);},style:{padding:'7px 14px',borderRadius:'8px',border:`1px solid ${i===cL?th.accent:th.border}`,background:i===cL?`${th.accent}18`:'transparent',color:i===cL?th.accent:th.t3,fontSize:'13px',fontWeight:600,cursor:'pointer',whiteSpace:'nowrap',flexShrink:0}},l.tz+" "+l.title))),
-          React.createElement('div',{style:{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'10px'}},
-            React.createElement('span',{style:{fontSize:'12px',color:th.t3}},`${cS+1}/${lesson.ss.length} · ${totalWords} words`),
-            React.createElement('div',{style:{display:'flex',gap:'4px'}},lesson.ss.map((_,i)=>React.createElement('div',{key:i,onClick:()=>{setCS(i);setAi(null);},style:{width:i===cS?'18px':'7px',height:'7px',borderRadius:'4px',background:i===cS?th.accent:i<cS?`${th.accent}50`:th.border,cursor:'pointer',transition:'all 0.3s'}})))
-          ),
-          mode==="study"?React.createElement(SentenceView,{s:sent,lang,pin,ai,setAi,spk:speak,th,fs,showC:sc}):React.createElement(SpeechPractice,{s:sent,spk:speak,th,fs})
-        )
-      )
-    ),
-    mode!=="stories"&&React.createElement('div',{style:{flexShrink:0,background:th.header,backdropFilter:'blur(16px)',borderTop:`1px solid ${th.border}`,padding:'10px 14px',display:'flex',justifyContent:'space-between',gap:'8px'}},
-      React.createElement('button',{onClick:prev,style:{padding:'10px 16px',borderRadius:'10px',border:`1px solid ${th.border}`,background:'transparent',color:th.t2,fontSize:'15px',fontWeight:600,cursor:'pointer'}},"← Prev"),
-      React.createElement('button',{onClick:()=>speak(sent.w.map(w=>w.h).join("")),style:{padding:'10px 20px',borderRadius:'10px',border:'none',background:`linear-gradient(135deg,${th.accent},${th.accent2})`,color:'#fff',fontSize:'16px',fontWeight:700,cursor:'pointer'}},"🔊"),
-      React.createElement('button',{onClick:next,style:{padding:'10px 16px',borderRadius:'10px',border:`1px solid ${th.accent}30`,background:`${th.accent}10`,color:th.accent,fontSize:'15px',fontWeight:700,cursor:'pointer'}},"Next →")
-    )
-  );
+
+// ═══ EASTER EGGS ═══
+(function(){
+var seq='';var secrets=['ghost','gui','dao','hell'];
+document.addEventListener('keydown',function(e){
+  if(diagOpen)return;
+  seq+=e.key.toLowerCase();if(seq.length>20)seq=seq.slice(-20);
+  for(var i=0;i<secrets.length;i++){
+    if(seq.indexOf(secrets[i])>=0){
+      seq='';
+      var yy=document.querySelector('.yy-spin');
+      if(yy){yy.style.transition='filter .2s';yy.style.filter='drop-shadow(0 0 100px rgba(0,255,136,.8))';setTimeout(function(){yy.style.filter='';yy.style.transition='';},800);}
+      openDiag();break;
+    }
+  }
+});
+})();
+
+
+// ═══ DOUBLE-TAP FOR MOBILE ═══
+(function(){
+var lt=0;
+document.addEventListener('touchend',function(e){
+  var n=Date.now();if(n-lt<300){e.preventDefault();if(diagOpen)closeDiag();else openDiag();}lt=n;
+},{passive:false});
+})();
+
+
+// ═══ CLICK RIPPLE ═══
+(function(){
+function rip(a,b){
+  var f=document.createElement('div');
+  f.style.cssText='position:fixed;left:'+(a-50)+'px;top:'+(b-50)+'px;width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(0,255,136,.3),transparent);pointer-events:none;z-index:15;';
+  document.body.appendChild(f);
+  f.animate([{transform:'scale(0)',opacity:1},{transform:'scale(3)',opacity:0}],{duration:600,easing:'ease-out'});
+  setTimeout(function(){f.remove();},600);
 }
-
-const root=ReactDOM.createRoot(document.getElementById('root'));
-root.render(React.createElement(MindBridge));
+document.addEventListener('click',function(e){rip(e.clientX,e.clientY);});
+document.addEventListener('touchstart',function(e){rip(e.touches[0].clientX,e.touches[0].clientY);},{passive:true});
+})();
 </script>
 </body>
 </html>
